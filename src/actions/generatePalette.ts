@@ -5,7 +5,7 @@ export default async function generatePalette(data: FormData) {
 
   // console.info({ query: data.get("query") })
 
-  const request = await fetch('http://localhost:3000/api/palette', {
+  const request = await fetch(`${process.env.API_ENDPOINT}/api/palette`, {
     method: 'post',
     body: JSON.stringify({
       query: data.get("query"),

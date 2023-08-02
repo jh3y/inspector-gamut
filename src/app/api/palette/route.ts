@@ -1,3 +1,4 @@
+import { kv } from "@vercel/kv";
 import { NextResponse } from 'next/server'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { Configuration, OpenAIApi } from 'openai-edge'
@@ -10,67 +11,103 @@ const openai = new OpenAIApi(config)
  
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
- 
-// const getQuery = (keyword: string, format: string = 'hsl') => `Generate a color palette based on the keyword "Pepsi". Return the colors in the CSS format ${format} as Arrays in a json object with the key "seed". The "seed" Array contains all related colors to the keyword. Inside the same JSON object, return "triadic", "analogue", "monochromatic", and "complimentary" color palettes based on the first color in the "seed" Array. These should also be Arrays under their respective keys in the same json object. Return only the json object and no explanation.`
-// const getQuery = (keyword: string, format: string = 'oklab') => `You are a web designer. Generate a "seed" Array of colors based on the keyword "${keyword}". Create triadic, complimentary, analogue, and monochromatic color palettes with the first color from the "seed" Array. Return a json object where each color palette and the seed array are keys. All colors should be defined using the CSS oklab color format/space as an Array of 3 numbers. Don't explain it.`
-// const getQuery = (keyword: string, format: string = 'oklab') => `
-//   Generate an Array of related colors for "${keyword}".
 
-//   Use this as the "seed" Array.
+// const getQuery = (keyword: string) => `
+//   Generate a CSS color palette for "${keyword}". Use the HSL format.
 
-//   Then generate "triadic", "analogue", "complimentary", and "monochromatic" color palettes using
-//   the first color from the "seed" Array.
-  
-//   Return a JSON object with the colors in CSS HSL format.
-  
-//   The output format should be like this:
-  
+//   Return it in a JSON object.
+
+//   The output should use this structure:
+
 //   {
-//     "seed": [...],
-//     "triadic": [...],
-//     ...
+//     "seed": ["hsl()", "hsl()", ...]
 //   }
 // `
 
 const getQuery = (keyword: string) => `
-  Generate a CSS color palette for "${keyword}". Use the HSL format.
+  You will be generating CSS color palettes.
 
-  Return it in a JSON object.
+  Create an Array of colors associated with "${keyword}" (Max. 10).
 
-  The output should use this structure:
+  Put this Array in a JSON object under the key "base".
 
-  {
-    "seed": ["hsl()", "hsl()", ...]
-  }
+  Generate "triadic complementary", "monochromatic", "analogous", "split complementary", "tetradic", and "complementary" based on ${keyword}.
+
+  Return them as Arrays under the respective keys in the JSON object using snakeCase for the keys.
+
+  All colors must be in the CSS "hsl" format. Don't explain anything.
 `
 
 export async function POST(req: Request) {
   // Extract the `messages` from the body of the request
-  const { query, format } = await req.json()
+  // const { query, format } = await req.json()
 
-  const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    stream: false,
-    messages: [{
-      role: 'user',
-      content: getQuery(query, format),
-    }]
-  })
+  // const response = await openai.createChatCompletion({
+  //   model: 'gpt-3.5-turbo',
+  //   stream: false,
+  //   messages: [
+  //   {
+  //     role: 'system',
+  //     content: 'You are a helpful assistant',
+  //   },
+  //   {
+  //     role: 'user',
+  //     content: getQuery(query),
+  //   }]
+  // })
 
-  // Catch any issues with the request and send back
-  if (response.status !== 200) {
-    const { status, statusText } = response
-    return new Response(statusText, {
-      status 
-    })
-  }
+  // // Catch any issues with the request and send back
+  // if (response.status !== 200) {
+  //   const { status, statusText } = response
+  //   return new Response(statusText, {
+  //     status 
+  //   })
+  // }
 
-  const data = await response.json()
+  // As long as there are no errors, update the KV store
+  await kv.hincrby('inspector:count', 'requests', 1)
+
+  // const data = await response.json()
   
   // console.info({ data: JSON.stringify(data.choices[0].message.content, undefined, 2) })
   
+  const data = {
+    base: [
+      'hsl(222, 94%, 39%)',
+      'hsl(222, 95%, 59%)',
+      'hsl(222, 94%, 79%)'
+    ],
+    triadic_complementary: [ 'hsl(42, 94%, 39%)', 'hsl(42, 95%, 59%)', 'hsl(42, 94%, 79%)' ],
+    monochromatic: [
+      'hsl(222, 88%, 19%)',
+      'hsl(222, 78%, 39%)',
+      'hsl(222, 68%, 59%)',
+      'hsl(222, 58%, 79%)'
+    ],
+    analogous: [
+      'hsl(217, 94%, 39%)',
+      'hsl(222, 94%, 39%)',
+      'hsl(227, 94%, 39%)'
+    ],
+    split_complementary: [
+      'hsl(192, 94%, 39%)',
+      'hsl(222, 94%, 39%)',
+      'hsl(252, 94%, 39%)'
+    ],
+    tetradic: [
+      'hsl(292, 94%, 39%)',
+      'hsl(222, 94%, 39%)',
+      'hsl(152, 94%, 39%)',
+      'hsl(332, 94%, 39%)'
+    ],
+    complementary: [ 'hsl(42, 94%, 39%)', 'hsl(222, 94%, 39%)' ]
+  }
+
+  console.info({ data: data })
+
   return NextResponse.json({
-    palette: JSON.parse(data.choices[0].message.content)
+    // palette: JSON.parse(data.choices[0].message.content)
+    palette: data
   }, {
     status: 200,
     statusText: 'Generated palette'
