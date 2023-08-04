@@ -12,18 +12,6 @@ const openai = new OpenAIApi(config)
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
 
-// const getQuery = (keyword: string) => `
-//   Generate a CSS color palette for "${keyword}". Use the HSL format.
-
-//   Return it in a JSON object.
-
-//   The output should use this structure:
-
-//   {
-//     "seed": ["hsl()", "hsl()", ...]
-//   }
-// `
-
 const getQuery = (keyword: string) => `
   You will be generating CSS color palettes.
 
@@ -69,8 +57,6 @@ export async function POST(req: Request) {
 
   // const data = await response.json()
   
-  // console.info({ data: JSON.stringify(data.choices[0].message.content, undefined, 2) })
-  
   const data = {
     base: [
       'hsl(222, 94%, 39%)',
@@ -103,8 +89,6 @@ export async function POST(req: Request) {
     complementary: [ 'hsl(42, 94%, 39%)', 'hsl(222, 94%, 39%)' ]
   }
 
-  console.info({ data: data })
-
   return NextResponse.json({
     // palette: JSON.parse(data.choices[0].message.content)
     palette: data
@@ -112,11 +96,4 @@ export async function POST(req: Request) {
     status: 200,
     statusText: 'Generated palette'
   })
-
-  // console.info({ data: JSON.stringify(data.content, undefined, 2)})
-
-  // Convert the response into a friendly text-stream
-  // const stream = OpenAIStream(response)
-  // Respond with the stream
-  // return new StreamingTextResponse(stream)
 }
