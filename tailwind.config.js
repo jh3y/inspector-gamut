@@ -16,3 +16,23 @@ module.exports = {
   },
   plugins: [],
 }
+
+
+/** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin')
+const defaultTheme = require('tailwindcss/defaultTheme')
+
+// Set up typography scales
+const fontSize = {}
+for (let i = -2; i < 10; i++) {
+  fontSize[`fluid-${i}`] = `var(--step-${i})`
+}
+
+module.exports = {
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  theme: {
+    extend: {
+      fontSize,
+    },
+  },
+}

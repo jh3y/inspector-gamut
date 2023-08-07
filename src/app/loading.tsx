@@ -1,1 +1,2 @@
-export default () => <p>loading...</p>
+const Loading = () => <p>Loading...</p>
+export default Loading

@@ -3,25 +3,70 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --step--2: clamp(0.69rem, calc(0.66rem + 0.18vw), 0.80rem);
+  --step--1: clamp(0.83rem, calc(0.78rem + 0.29vw), 1.00rem);
+  --step-0: clamp(1.00rem, calc(0.91rem + 0.43vw), 1.25rem);
+  --step-1: clamp(1.20rem, calc(1.07rem + 0.63vw), 1.56rem);
+  --step-2: clamp(1.44rem, calc(1.26rem + 0.89vw), 1.95rem);
+  --step-3: clamp(1.73rem, calc(1.48rem + 1.24vw), 2.44rem);
+  --step-4: clamp(2.07rem, calc(1.73rem + 1.70vw), 3.05rem);
+  --step-5: clamp(2.49rem, calc(2.03rem + 2.31vw), 3.82rem);
+  --step-6: clamp(2.99rem, calc(2.37rem + 3.10vw), 4.77rem);
+  --step-7: clamp(3.58rem, calc(2.76rem + 4.13vw), 5.96rem);
+  --step-8: clamp(4.30rem, calc(3.20rem + 5.48vw), 7.45rem);
+  --step-9: clamp(5.16rem, calc(3.72rem + 7.22vw), 9.31rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+h1 {
+  font-size: var(--step-5);
+  line-height: 1;
+}
+h2 {
+  font-size: var(--step-3);
+  line-height: 1;
+}
+h3 {
+  font-size: var(--step-2);
+}
+
+.content {
+  width: 80ch;
+  max-width: 100%;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  align-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: hsl(0 0% 4%);
+  color: #d4d4d4;
+  font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+
+h1 {
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    72deg,
+    hsl(10 100% 80%),
+    hsl(30 100% 78%),
+    hsl(43 100% 75%),
+    hsl(150 100% 80%),
+    hsl(220 100% 85%),
+    hsl(286 100% 80%),
+    hsl(320 100% 75%),
+    hsl(10 100% 80%)
+  );
+  background-size: 200%;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: sway 8s infinite linear;
+}
+
+@keyframes sway {
+  to {
+    background-position: -200% 0;
+  }
 }

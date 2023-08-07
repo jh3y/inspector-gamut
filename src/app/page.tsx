@@ -17,14 +17,21 @@ export const metadata = {
 
 export default async function Generate(props: any) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Generate a palette...</h1>
-      <Suspense fallback={<Loading/>}>
-        <Counter/>
-      </Suspense>
-      <form>
-        <input required name="query" id="query" type="text" placeholder="Generate a palette based on Pepsi, clowns, clouds, etc." />
-        <button>Generate</button>
+    <main className="content flex-grow grid content-center gap-16 items-center justify-between p-4">
+      <header className="grid gap-4">
+        <h1 className="font-bold text-center">
+          Generate color palettes using AI and CSS Color Level 4
+        </h1>
+        <Suspense fallback={<Loading/>}>
+          <Counter/>
+        </Suspense>
+      </header>
+      <form className="grid gap-4">
+        <p className="text-center">Start by entering a search term. Be as descriptive as you like.</p>
+        <div className="flex justify-center">
+          <input className="max-w-[400px] text-neutral-800 p-2 px-4 flex-grow rounded-l-full" required name="query" id="query" type="text" placeholder="Dr. Pepper, Barbie Pink, Happiness, Zelda, etc." />
+          <button className="border-transparent outline-transparent border-4 rounded-r-full text-fluid--1 flex gap-x-1 items-center text-white bg-purple-600 transition hover:bg-purple-500 px-3 py-1">Generate</button>
+        </div>
       </form>
       <Suspense fallback={<Loading/>}>
         <Results query={props?.searchParams?.query} />
