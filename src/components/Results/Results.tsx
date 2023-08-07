@@ -15,6 +15,8 @@ export default async function Results (props: ResultsProps) {
     data = await (await generatePalette(submit)).json()
   }
 
+  console.info({ data })
+
   if (!data) return null
 
   return (
@@ -33,7 +35,7 @@ export default async function Results (props: ResultsProps) {
           return (
             <section key={palette}>
               <h2>{palette}</h2>
-              {data.palette[palette].map((color: string, index: number) => {
+              {data.palette[palette].map((color: Color, index: number) => {
                 return (
                   <ColorSwatch key={`${palette}--${index}`} color={color} />
                 )

@@ -2,6 +2,7 @@ import { kv } from "@vercel/kv";
 import { NextResponse } from 'next/server'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { Configuration, OpenAIApi } from 'openai-edge'
+import convertColor from '../../../utils/converter'
 
 // Create an OpenAI API client (that's edge friendly!)
 const config = new Configuration({
@@ -89,9 +90,13 @@ export async function POST(req: Request) {
     complementary: [ 'hsl(42, 94%, 39%)', 'hsl(222, 94%, 39%)' ]
   }
 
+  const converted = convertColor(data)
+
+  console.info({ converted })
+
   return NextResponse.json({
     // palette: JSON.parse(data.choices[0].message.content)
-    palette: data
+    palette: converted
   }, {
     status: 200,
     statusText: 'Generated palette'

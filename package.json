@@ -15,6 +15,7 @@
     "@vercel/kv": "^0.2.2",
     "ai": "^2.1.26",
     "autoprefixer": "10.4.14",
+    "color": "^4.2.3",
     "colorjs.io": "^0.4.5",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",

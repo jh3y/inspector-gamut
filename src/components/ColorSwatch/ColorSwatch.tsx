@@ -1,13 +1,13 @@
 import React from 'react'
 
 interface ColorSwatchProps {
-  color: string
+  color: Color
 }
 
 const ColorSwatch: React.FC<ColorSwatchProps> = ({ color }) => {
   return (
-    <div className="w-4 aspect-square" style={{background: color}}>
-      <span>{color}</span>
+    <div className="w-4 aspect-square" style={{background: color.p3}}>
+      <span>{color.p3}</span>
     </div>
   )
 }
