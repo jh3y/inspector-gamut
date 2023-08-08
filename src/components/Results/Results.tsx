@@ -1,26 +1,28 @@
+'use client';
+
 import React from 'react'
-import generatePalette from '@/actions/generatePalette'
 import ColorSwatch from "@/components/ColorSwatch/ColorSwatch"
 
 interface ResultsProps {
-  query: string
+  palette: ConvertedColorData
 }
 
+export const ResultsLoading = () => (
+  <p className="font-bold text-center text-fluid-2 text-neutral-300 leading-none">{`Robots are generating the palettes!`}</p>
+)
+
 export default async function Results (props: ResultsProps) {
-  let data: any
-
-  if (props.query) {
-    const submit = new FormData()
-    submit.append("query", props.query)
-    data = await (await generatePalette(submit)).json()
+  const [activeSpace, setActiveSpace] = React.useState<string>('oklab')
+  const switchActiveSpace = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setActiveSpace(event.target.value)
   }
-
-  console.info({ data })
-
-  if (!data) return null
-
   return (
     <>
+      <select onChange={switchActiveSpace}>
+        {['oklab', 'oklch', 'p3', 'hsl', 'hex', 'rgb'].map(space => (
+          <option key={space} value={space}>{space}</option>
+        ))}
+      </select>
       {
         [
           "base",
@@ -33,13 +35,15 @@ export default async function Results (props: ResultsProps) {
         ]
         .map((palette) => {
           return (
-            <section key={palette}>
-              <h2>{palette}</h2>
-              {data.palette[palette].map((color: Color, index: number) => {
-                return (
-                  <ColorSwatch key={`${palette}--${index}`} color={color} />
-                )
-              })}
+            <section key={palette} className="grid gap-6 text-center">
+              <h2>{`${palette.split('_').map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ')}`}</h2>
+              <div className="grid">
+                {props.palette[palette as keyof ConvertedColorData].map((color: Color, index: number) => {
+                  return (
+                    <ColorSwatch key={`${palette}--${index}`} id={`${palette}--${index}`} color={color} activeSpace={activeSpace as keyof Color} />
+                  )
+                })}
+              </div>
             </section>
           )})
       }

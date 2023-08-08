@@ -42,7 +42,7 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   background: hsl(0 0% 4%);
-  color: #d4d4d4;
+  color: hsl(0 0% 100%);
   font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 

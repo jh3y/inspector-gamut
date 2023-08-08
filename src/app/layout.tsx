@@ -13,9 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <header className="content p-4">
-          <div className="flex items-center justify-between">  
+      <body className="pt-24">
+        <header className="content flex items-center bg-black/50 z-20 backdrop-blur-sm p-4 fixed top-0 left-1/2 -translate-x-1/2 h-20">
+          <div className="w-full flex items-center justify-between">  
             <Link href="/" className="flex gap-2 items-center">
               <svg aria-hidden="true" className="w-12" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 202">
                 <path d="M38.5 84H185l-19.5 54-53.5 63-52.5-63-21-54Z" fill="#000"/>

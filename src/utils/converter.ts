@@ -5,14 +5,20 @@ import ColorBasic from 'color'
 const generateColor = (colorString: string) => {
   const newColor = new ColorUtils(colorString)
   const basicColor = new ColorBasic(colorString)
-  return {
+
+  const conversion = {
     hsl: newColor.to('hsl').toString(),
     oklab: newColor.to('oklab').toString(),
     oklch: newColor.to('oklch').toString(),
     p3: newColor.to('p3').toString(),
     hex: basicColor.hex().toString(),
     rgb: basicColor.rgb().toString(),
+    dark: basicColor.isDark(),
   }
+  // Weirdness where display-p3 isn't being generated on the server...
+  // https://github.com/LeaVerou/color.js/issues/260
+  if (!conversion.p3.includes('display')) conversion.p3.replace(/p3/g, 'display-p3')
+  return conversion 
 }
 
 const palettes = [

@@ -92,7 +92,7 @@ export async function POST(req: Request) {
 
   const converted = convertColor(data)
 
-  console.info({ converted })
+  // console.info({ converted })
 
   return NextResponse.json({
     // palette: JSON.parse(data.choices[0].message.content)

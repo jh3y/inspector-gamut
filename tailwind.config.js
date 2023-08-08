@@ -33,6 +33,10 @@ module.exports = {
   theme: {
     extend: {
       fontSize,
+      width: fontSize,
+      gridTemplateColumns: {
+        swatch: 'repeat(auto-fill, minmax(200px, 40%))'
+      },
     },
   },
 }

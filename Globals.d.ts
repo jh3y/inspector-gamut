@@ -14,6 +14,7 @@ interface Color {
   hex: string
   rgb: string
   p3: string
+  dark?: boolean
 }
 
 interface ConvertedColorData {
