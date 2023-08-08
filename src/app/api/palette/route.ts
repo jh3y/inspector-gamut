@@ -91,13 +91,11 @@ export async function POST(req: Request) {
   // }
 
   // Convert the colors and get the CSS Color Level 4 stuff as ChatGPT doesn't do well.
-  // const converted = convertColor(data)
-  
+  // const converted = convertColor(data) // DEBUG
   const converted = convertColor(JSON.parse(data.choices[0].message.content))
 
 
   return NextResponse.json({
-    // palette: JSON.parse(data.choices[0].message.content)
     palette: converted
   }, {
     status: 200,
