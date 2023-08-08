@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function Generate(props: any) {
   return (
-    <main className="content flex-grow grid content-center gap-16 items-center justify-between p-4">
+    <main className="content flex-grow grid content-center gap-16 items-center justify-items-center p-4">
       <header className="grid gap-4">
         <h1 className="font-bold text-center">
           Generate color palettes using AI and CSS Color Level 4
@@ -19,8 +19,8 @@ export default async function Generate(props: any) {
           <Counter/>
         </Suspense>
       </header>
-      <div className="grid gap-4">
-        <p className="text-center">Start by entering a search term. Be as descriptive as you like.</p>
+      <div className="grid gap-4 max-w-[400px]">
+        <p className="text-center">Enter a search term. Be as descriptive as you like.</p>
         <GeneratorForm />
       </div>
     </main>

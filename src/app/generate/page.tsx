@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function Generate(props: any) {
   let data: {
-    palette: ColorData
+    palette: ConvertedColorData
   } | undefined = undefined
 
   if (props?.searchParams?.query) {
@@ -23,10 +23,10 @@ export default async function Generate(props: any) {
   if (!data) return null
     
   return (
-    <main className="content flex-grow grid content-start gap-16 items-center p-4">
+    <main className="content flex-grow grid content-start gap-4 items-center p-4">
       <GeneratorForm />
       <Suspense fallback={<ResultsLoading/>}>
-        <Results palette={data.palette} />
+        <Results palette={data.palette} query={props?.searchParams?.query}/>
       </Suspense>
     </main>
   )

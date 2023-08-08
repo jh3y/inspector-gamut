@@ -1,10 +1,19 @@
 'use client';
 
 import React from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import ColorSwatch from "@/components/ColorSwatch/ColorSwatch"
 
 interface ResultsProps {
   palette: ConvertedColorData
+  query: string
 }
 
 export const ResultsLoading = () => (
@@ -18,11 +27,20 @@ export default async function Results (props: ResultsProps) {
   }
   return (
     <>
-      <select onChange={switchActiveSpace}>
-        {['oklab', 'oklch', 'p3', 'hsl', 'hex', 'rgb'].map(space => (
-          <option key={space} value={space}>{space}</option>
-        ))}
-      </select>
+      <Select onValueChange={setActiveSpace}>
+        <SelectTrigger className="w-full focus-visible:outline-purple-200">
+          <SelectValue className="text-center block" placeholder="Select Color Space" />
+        </SelectTrigger>
+        <SelectContent>
+          {['oklab', 'oklch', 'p3', 'hsl', 'hex', 'rgb'].map(space => (
+            <SelectItem key={space} value={space}>{space}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <p className="font-bold leading-none grid gap-2">
+        <span className="text-fluid-1">Showing results for:</span>
+        <span>{`"${props.query}"`}</span>
+      </p>
       {
         [
           "base",
@@ -36,7 +54,7 @@ export default async function Results (props: ResultsProps) {
         .map((palette) => {
           return (
             <section key={palette} className="grid gap-6 text-center">
-              <h2>{`${palette.split('_').map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ')}`}</h2>
+              <h2 className="text-fluid-1 font-bold opacity-50">{`${palette.split('_').map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ')}`}</h2>
               <div className="grid">
                 {props.palette[palette as keyof ConvertedColorData].map((color: Color, index: number) => {
                   return (
