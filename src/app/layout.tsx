@@ -1,5 +1,7 @@
+import { Analytics } from '@vercel/analytics/react';
+ 
 import './globals.css'
- import Link from 'next/link'
+import Link from 'next/link'
 
 export const metadata = {
   title: 'Inspector Gamut',
@@ -31,6 +33,7 @@ export default function RootLayout({
           </div>
         </header>
         {children}
+        <Analytics />
         <footer className="content p-4">
           <div className="flex items-center justify-center">
             jh3y &copy; 2023 ┬┴┬┴┤•ᴥ•ʔ├┬┴┬┴
