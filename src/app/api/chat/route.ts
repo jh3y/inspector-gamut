@@ -13,7 +13,7 @@ const openai = new OpenAIApi(config)
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
 
-export const getQuery = (keyword: string) => `
+const getQuery = (keyword: string) => `
   You will be generating CSS color palettes.
 
   Create an Array of colors associated with "${keyword}" (Max. 10).
