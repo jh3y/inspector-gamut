@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="pt-24">
+      <body className="pt-24 overflow-y-scroll">
         <header className="content flex items-center bg-black/50 z-20 backdrop-blur-sm p-4 fixed top-0 left-1/2 -translate-x-1/2 h-20">
           <div className="w-full flex items-center justify-between">  
             <Link href="/" className="flex gap-2 items-center">

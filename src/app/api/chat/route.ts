@@ -13,7 +13,7 @@ const openai = new OpenAIApi(config)
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
 
-const getQuery = (keyword: string) => `
+export const getQuery = (keyword: string) => `
   You will be generating CSS color palettes.
 
   Create an Array of colors associated with "${keyword}" (Max. 10).
@@ -29,34 +29,28 @@ const getQuery = (keyword: string) => `
 
 export async function POST(req: Request) {
   // Extract the `messages` from the body of the request
-  const { query, format } = await req.json()
+  const { messages } = await req.json()
+
+  console.info({ messages })
 
   const response = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
-    stream: false,
-    messages: [
-    {
-      role: 'system',
-      content: 'You are a helpful assistant',
-    },
-    {
-      role: 'user',
-      content: getQuery(query),
-    }]
+    stream: true,
+    messages,
   })
 
   // Catch any issues with the request and send back
-  if (response.status !== 200) {
-    const { status, statusText } = response
-    return new Response(statusText, {
-      status 
-    })
-  }
+  // if (response.status !== 200) {
+  //   const { status, statusText } = response
+  //   return new Response(statusText, {
+  //     status 
+  //   })
+  // }
 
   // As long as there are no errors, update the KV store
   await kv.hincrby('inspector:count', 'requests', 1)
 
-  const data = await response.json()
+  // const data = await response.json()
   
   // const data = {
   //   base: [
@@ -92,13 +86,22 @@ export async function POST(req: Request) {
 
   // Convert the colors and get the CSS Color Level 4 stuff as ChatGPT doesn't do well.
   // const converted = convertColor(data) // DEBUG
-  const converted = convertColor(JSON.parse(data.choices[0].message.content))
+  // const converted = convertColor(JSON.parse(data.choices[0].message.content))
 
 
-  return NextResponse.json({
-    palette: converted
-  }, {
-    status: 200,
-    statusText: 'Generated palette'
+  const stream = OpenAIStream(response, {
+    onCompletion: async () => {
+      await kv.hincrby('inspector:count', 'requests', 1)
+      console.info('palette count bumped')
+    }
   })
+  // Respond with the stream
+  return new StreamingTextResponse(stream)
+
+  // return NextResponse.json({
+  //   palette: converted
+  // }, {
+  //   status: 200,
+  //   statusText: 'Generated palette'
+  // })
 }

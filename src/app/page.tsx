@@ -3,10 +3,10 @@ import generatePalette from '@/actions/generatePalette'
 import GeneratorForm from '@/components/GeneratorForm/GeneratorForm'
 import Counter, { CounterLoading } from '@/components/Counter/Counter'
 
-export const metadata = {
-  title: 'Inspector Gamut',
-  description: 'Generate a modern CSS color palette with AI',
-}
+// export const metadata = {
+//   title: 'Inspector Gamut',
+//   description: 'Generate a modern CSS color palette with AI',
+// }
 
 export default async function Generate(props: any) {
   return (

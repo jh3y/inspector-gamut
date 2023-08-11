@@ -10,61 +10,92 @@ import {
 } from "@/components/ui/select"
 
 import ColorSwatch from "@/components/ColorSwatch/ColorSwatch"
+import { Message } from 'ai';
+import { useChat } from 'ai/react';
 
 interface ResultsProps {
-  palette: ConvertedColorData
-  query: string
+  initialMessages?: Message[],
 }
 
 export const ResultsLoading = () => (
   <p className="font-bold text-center text-fluid-2 text-neutral-300 leading-none">{`Robots are generating the palettes!`}</p>
 )
 
-export default async function Results (props: ResultsProps) {
-  const [activeSpace, setActiveSpace] = React.useState<string>('oklab')
-  const switchActiveSpace = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setActiveSpace(event.target.value)
-  }
+export default async function Results ({initialMessages}: ResultsProps) {
+  const { messages, input, handleInputChange, handleSubmit } = useChat()
+ 
   return (
-    <>
-      <Select onValueChange={setActiveSpace}>
-        <SelectTrigger className="w-full focus-visible:outline-purple-200">
-          <SelectValue className="text-center block" placeholder="Select Color Space" />
-        </SelectTrigger>
-        <SelectContent>
-          {['oklab', 'oklch', 'p3', 'hsl', 'hex', 'rgb'].map(space => (
-            <SelectItem key={space} value={space}>{space}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <p className="font-bold leading-none grid gap-2">
-        <span className="text-fluid-1">Showing results for:</span>
-        <span>{`"${props.query}"`}</span>
-      </p>
-      {
-        [
-          "base",
-          "monochromatic",
-          "complementary",
-          "analogous",
-          "triadic_complementary",
-          "split_complementary",
-          "tetradic",
-        ]
-        .map((palette) => {
-          return (
-            <section key={palette} className="grid gap-6 text-center">
-              <h2 className="text-fluid-1 font-bold opacity-50">{`${palette.split('_').map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ')}`}</h2>
-              <div className="grid">
-                {props.palette[palette as keyof ConvertedColorData].map((color: Color, index: number) => {
-                  return (
-                    <ColorSwatch key={`${palette}--${index}`} id={`${palette}--${index}`} color={color} activeSpace={activeSpace as keyof Color} />
-                  )
-                })}
-              </div>
-            </section>
-          )})
-      }
-    </>
+    <div>
+      {messages.map(m => (
+        <div key={m.id}>
+          {m.role === 'user' ? 'User: ' : 'AI: '}
+          {m.content}
+        </div>
+      ))}
+ 
+      <form onSubmit={handleSubmit}>
+        <label>
+          Say something...
+          <input value={input} onChange={handleInputChange} />
+        </label>
+        <button type="submit">Send</button>
+      </form>
+    </div>
   )
+  // const { messages } = useChat({
+  //   // api: '/api/chat',
+  //   initialInput: 'Hello, how are you?',
+  //   onResponse: () => console.info('responded'),
+  //   onFinish: () => console.info('finished')
+  // })
+
+
+  // const [activeSpace, setActiveSpace] = React.useState<string>('oklab')
+  // const switchActiveSpace = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setActiveSpace(event.target.value)
+  // }
+  // return (
+  //   <>
+  //     <Select onValueChange={setActiveSpace}>
+  //       <SelectTrigger className="w-full focus-visible:outline-purple-200">
+  //         <SelectValue className="text-center block" placeholder="Select Color Space" />
+  //       </SelectTrigger>
+  //       <SelectContent>
+  //         {['oklab', 'oklch', 'p3', 'hsl', 'hex', 'rgb'].map(space => (
+  //           <SelectItem key={space} value={space}>{space}</SelectItem>
+  //         ))}
+  //       </SelectContent>
+  //     </Select>
+  //     {JSON.stringify(messages, undefined, 2)}
+  //     {/*<p className="font-bold leading-none grid gap-2">
+  //       <span className="text-fluid-1">Showing results for:</span>
+  //       <span>{`"${props.query}"`}</span>
+  //     </p>
+  //     {
+  //       [
+  //         "base",
+  //         "monochromatic",
+  //         "complementary",
+  //         "analogous",
+  //         "triadic_complementary",
+  //         "split_complementary",
+  //         "tetradic",
+  //       ]
+  //       .map((palette) => {
+  //         return (
+  //           <section key={palette} className="grid gap-6 text-center">
+  //             <h2 className="text-fluid-1 font-bold opacity-50">{`${palette.split('_').map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(' ')}`}</h2>
+  //             <div className="grid">
+  //               {props.palette[palette as keyof ConvertedColorData].map((color: Color, index: number) => {
+  //                 return (
+  //                   <ColorSwatch key={`${palette}--${index}`} id={`${palette}--${index}`} color={color} activeSpace={activeSpace as keyof Color} />
+  //                 )
+  //               })}
+  //             </div>
+  //           </section>
+  //         )})
+  //     }
+  //     <div className="select-container" ref={container}></div>*/}
+  //   </>
+  // )
 }
