@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense } from "react";
-import generatePalette from '@/actions/generatePalette'
 import GeneratorForm from '@/components/GeneratorForm/GeneratorForm'
 import Counter, { CounterLoading } from '@/components/Counter/Counter'
 import Results, { ResultsLoading } from "@/components/Results/Results";
