@@ -56,6 +56,8 @@ export default function Results ({query}: ResultsProps) {
 
   if (!result) return <div>Loading...</div>
  
+  console.info({ result, activeSpace })
+
   return (
     <>
       <p className="font-bold leading-none grid gap-2">
