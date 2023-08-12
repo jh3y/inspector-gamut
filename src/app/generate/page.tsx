@@ -1,49 +1,27 @@
-'use client'
-
-import { Suspense } from "react";
+import React from 'react' 
 import GeneratorForm from '@/components/GeneratorForm/GeneratorForm'
-import Counter, { CounterLoading } from '@/components/Counter/Counter'
-import Results, { ResultsLoading } from "@/components/Results/Results";
-// import { getQuery } from "../api/palette/route";
-import { Message } from "ai";
+import Results from '@/components/Results/Results'
 
-// export const metadata = {
-//   title: 'Inspector Gamut',
-//   description: 'Generate a modern CSS color palette with AI',
-// }
+const getQuery = (keyword: string) => `
+  You will be generating CSS color palettes.
 
-export default async function Generate(props: any) {
-  // let data: {
-  //   palette: ConvertedColorData
-  // } | undefined = undefined
+  Create an Array of colors associated with "${keyword}" (Max. 10).
 
-  // const initialMessages = [
-  //   {
-  //     id: 'first',
-  //     role: 'system',
-  //     content: 'You are a helpful assistant',
-  //   } as Message,
-  //   {
-  //     id: 'second',
-  //     role: 'user',
-  //     content: getQuery(props?.searchParams?.query),
-  //   } as Message
-  // ]
+  Put this Array in a JSON object under the key "base".
 
-  // console.info({ initialMessages })
+  Generate "triadic complementary", "monochromatic", "analogous", "split complementary", "tetradic", and "complementary" based on ${keyword}.
 
-  // if (props?.searchParams?.query) {
-  //   const submit = new FormData()
-  //   submit.append("query", props.query)
-  //   data = await (await generatePalette(submit)).json()
-  // }
+  Return them as Arrays under the respective keys in the JSON object using snakeCase for the keys.
 
-  // if (!data) return null
-    
+  All colors must be in the CSS "hsl" format. Don't explain anything.
+`
+ 
+export default function Chat({ searchParams }: { searchParams: { query: string }}) {
+ 
   return (
     <main className="content flex-grow grid content-start gap-4 items-center p-4">
-      {/*<GeneratorForm />*/}
-      <Results />
+      <GeneratorForm />
+      <Results query={getQuery(searchParams.query)}/>
     </main>
   )
 }
