@@ -3,11 +3,6 @@ import { Analytics } from '@vercel/analytics/react';
 import './globals.css'
 import Link from 'next/link'
 
-export const metadata = {
-  title: 'Inspector Gamut',
-  description: 'An AI-powered proof of concept for generating CSS color palettes',
-}
-
 export default function RootLayout({
   children,
 }: {
