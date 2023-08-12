@@ -2,22 +2,30 @@ import ColorUtils from 'colorjs.io'
 // @ts-ignore-next-line
 import ColorBasic from 'color'
 
+const newSpaceSanitize = (color: ColorUtils) => color.coords.map(c => c.toFixed(4)).join(' ')
+
 const generateColor = (colorString: string) => {
   const newColor = new ColorUtils(colorString)
   const basicColor = new ColorBasic(colorString)
 
+  const hsl = newColor.to('hsl')
+  const oklab = newColor.to('oklab')
+  const oklch = newColor.to('oklch')
+  const p3 = newColor.to('p3')
+
   const conversion = {
-    hsl: newColor.to('hsl').toString(),
-    oklab: newColor.to('oklab').toString(),
-    oklch: newColor.to('oklch').toString(),
-    p3: newColor.to('p3').toString(),
+    hsl: `hsl(${hsl.coords[0]} ${hsl.coords.slice(1).map(c => `${c}%`).join(' ')})`,
+    oklab: `oklab(${newSpaceSanitize(oklab)})`,
+    oklch: `oklch(${newSpaceSanitize(oklch)})`,
+    p3: `color(display-p3 ${newSpaceSanitize(p3)})`,
     hex: basicColor.hex().toString(),
     rgb: basicColor.rgb().toString(),
     dark: basicColor.isDark(),
   }
-  // Weirdness where display-p3 isn't being generated on the server...
+
+  // Weirdness where colors aren't being generated on the server...
   // https://github.com/LeaVerou/color.js/issues/260
-  if (!conversion.p3.includes('display')) conversion.p3.replace(/p3/g, 'display-p3')
+  // Hence doing the weird coord stuff above...
   return conversion 
 }
 
