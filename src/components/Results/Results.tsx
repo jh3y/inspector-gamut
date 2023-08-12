@@ -14,15 +14,37 @@ import { Message } from 'ai';
 import { useChat } from 'ai/react';
 
 interface ResultsProps {
-  initialMessages?: Message[],
+  query: string,
 }
 
 export const ResultsLoading = () => (
   <p className="font-bold text-center text-fluid-2 text-neutral-300 leading-none">{`Robots are generating the palettes!`}</p>
 )
 
-export default async function Results ({initialMessages}: ResultsProps) {
-  const { messages, input, handleInputChange, handleSubmit } = useChat()
+export default function Results ({query}: ResultsProps) {
+  const { messages, input, handleInputChange, handleSubmit, reload } = useChat({
+    api: '/api/generate',
+    onFinish: async (message) => {
+      // await kv.hincrby('inspector:count', 'requests', 1)
+      console.info('incremented', message)
+    },
+    initialMessages: [
+      {
+        id: 'first',
+        role: 'system',
+        content: 'You are a helpful assistant',
+      } as Message,
+      {
+        id: 'second',
+        role: 'user',
+        content: query
+      } as Message
+    ]
+  })
+
+  React.useEffect(() => {
+    reload()
+  }, [])
  
   return (
     <div>
@@ -32,14 +54,6 @@ export default async function Results ({initialMessages}: ResultsProps) {
           {m.content}
         </div>
       ))}
- 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Say something...
-          <input value={input} onChange={handleInputChange} />
-        </label>
-        <button type="submit">Send</button>
-      </form>
     </div>
   )
   // const { messages } = useChat({

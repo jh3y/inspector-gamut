@@ -1,52 +1,27 @@
-'use client'
-
 import React from 'react' 
-import { Message, useChat } from 'ai/react'
-import { kv } from '@vercel/kv'
- 
-export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, reload } = useChat({
-    onFinish: async () => {
-      // await kv.hincrby('inspector:count', 'requests', 1)
-      console.info('incremented')
-    },
-    initialMessages: [
-      {
-        id: 'first',
-        role: 'system',
-        content: 'You are a helpful assistant',
-      } as Message,
-      {
-        id: 'second',
-        role: 'user',
-        content: 'Give me the blue color used for Pepsi in CSS oklab format',
-      } as Message
-    ]
-  })
+import GeneratorForm from '@/components/GeneratorForm/GeneratorForm'
+import Results from '@/components/Results/Results'
 
-  React.useEffect(() => {
-    reload()
-  }, [])
+const getQuery = (keyword: string) => `
+  You will be generating CSS color palettes.
+
+  Create an Array of colors associated with "${keyword}" (Max. 10).
+
+  Put this Array in a JSON object under the key "base".
+
+  Generate "triadic complementary", "monochromatic", "analogous", "split complementary", "tetradic", and "complementary" based on ${keyword}.
+
+  Return them as Arrays under the respective keys in the JSON object using snakeCase for the keys.
+
+  All colors must be in the CSS "hsl" format. Don't explain anything.
+`
+ 
+export default function Chat({ searchParams }: { searchParams: { query: string }}) {
  
   return (
-    <div>
-      {messages.map((m, index) => {
-        if (index <= 1) return null
-        return (
-          <div key={m.id}>
-            {m.role === 'user' ? 'User: ' : 'AI: '}
-            {m.content}
-          </div>
-        )
-      })}
- 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Say something...
-          <input value={input} onChange={handleInputChange} />
-        </label>
-        <button type="submit">Send</button>
-      </form>
-    </div>
+    <main className="content flex-grow grid content-start gap-4 items-center p-4">
+      <GeneratorForm />
+      <Results query={getQuery(searchParams.query)}/>
+    </main>
   )
 }
