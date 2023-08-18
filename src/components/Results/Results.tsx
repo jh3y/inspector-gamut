@@ -20,7 +20,7 @@ interface ResultsProps {
 }
 
 export const ResultsLoading = () => (
-  <p className="font-bold text-center text-fluid-2 text-neutral-300 leading-none">{`Robots are generating the palettes!`}</p>
+  <p className="loader font-bold text-center text-fluid-2 text-neutral-300">{`Robots are generating the palettes!`}</p>
 )
 
 export default function Results ({query}: ResultsProps) {
@@ -54,9 +54,7 @@ export default function Results ({query}: ResultsProps) {
     reload()
   }, [reload])
 
-  if (!result) return <div>Loading...</div>
- 
-  console.info({ result, activeSpace })
+  if (!result) return <ResultsLoading/>
 
   return (
     <>
